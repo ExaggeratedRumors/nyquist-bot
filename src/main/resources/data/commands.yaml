@@ -1,0 +1,3 @@
+commands:
+  "!random": "Random number: "
+  "!trigger": "Trigger one."
