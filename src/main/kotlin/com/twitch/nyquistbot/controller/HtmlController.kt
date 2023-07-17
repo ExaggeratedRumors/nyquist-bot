@@ -1,17 +1,25 @@
 package com.twitch.nyquistbot.controller
 
+import com.twitch.nyquistbot.commands.RandomPhrase
 import com.twitch.nyquistbot.model.Activity
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.ui.set
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
 
-@RestController
+@Controller
 class HtmlController {
-    @GetMapping("/test")
-    fun testGet(
-        @RequestParam(value = "input", defaultValue = "test") input: String
-    ) = "Input value: $input"
-
     @GetMapping("/commands")
-    fun commandsGet() = Activity.commands.commands
+    fun commandsGet(model: Model): String {
+        model["title"] = "Commands"
+        model.addAttribute("commands", Activity.commands.commands)
+        return "commands"
+    }
+
+    @GetMapping("/phrases")
+    fun phrasesGet(model: Model): String {
+        model["title"] = "Phrases"
+        model.addAttribute("phrases", RandomPhrase.phrases)
+        return "phrases"
+    }
 }

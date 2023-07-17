@@ -13,10 +13,18 @@ import org.springframework.http.HttpStatus
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
 
-    @BeforeAll
-    fun setup() {
-        println(">> Setup")
+    companion object {
+        @BeforeAll
+        fun setup() {
+            println(">> Setup")
+        }
+
+        @AfterAll
+        fun teardown() {
+            println(">> Tear down")
+        }
     }
+
 
     @Test
     fun `Assert blog page title, content and status code`() {
@@ -30,10 +38,4 @@ class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
     fun `Assert article page title, content and status code`() {
         println(">> TODO")
     }
-
-    @AfterAll
-    fun teardown() {
-        println(">> Tear down")
-    }
-
 }

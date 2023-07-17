@@ -4,7 +4,7 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 
 class Activity {
     companion object {
-        lateinit var commands: CommandsList
+        lateinit var commands: BotBuilder.CommandsList
 
         fun startActivity() {
             val botBuilder = BotBuilder()
