@@ -4,4 +4,6 @@ import com.twitch.nyquistbot.model.Connection
 
 interface Command {
     fun execute(connection: Connection)
+    fun getCall(): String
+    fun getCounter(): Int
 }

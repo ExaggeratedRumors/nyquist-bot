@@ -12,7 +12,7 @@ class HtmlController {
     @GetMapping("/commands")
     fun commandsGet(model: Model): String {
         model["title"] = "Commands"
-        model.addAttribute("commands", Activity.commands.commands)
+        model.addAttribute("commands", Activity.registeredCommands)
         return "commands"
     }
 

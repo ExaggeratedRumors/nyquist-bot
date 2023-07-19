@@ -9,6 +9,7 @@ import com.twitch.nyquistbot.utils.phrasesPath
 
 class RandomPhrase : Command {
     companion object {
+        var counter: Int = 0
         val phrases = readYamlObject(
             phrasesPath,
             PhrasesList::class.java
@@ -16,8 +17,12 @@ class RandomPhrase : Command {
     }
 
     override fun execute(connection: Connection) {
+        counter += 1
         connection.send(phrases.random())
     }
+
+    override fun getCall() = "phrase"
+    override fun getCounter() = counter
 
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
     @JsonIgnoreProperties(ignoreUnknown = true)
