@@ -1,6 +1,6 @@
 package com.twitch.nyquistbot.commands
 
-import com.twitch.nyquistbot.model.Connection
+import com.twitch.nyquistbot.transmission.Connection
 
 interface Command {
     fun execute(connection: Connection)

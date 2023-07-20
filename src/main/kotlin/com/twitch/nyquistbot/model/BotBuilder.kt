@@ -6,17 +6,17 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.twitch.nyquistbot.commands.Command
 import com.twitch.nyquistbot.commands.CommandsContainer
 import com.twitch.nyquistbot.utils.YamlReader.Companion.readYamlObject
-import com.twitch.nyquistbot.utils.commandsPath
-import com.twitch.nyquistbot.utils.configurationPath
+import com.twitch.nyquistbot.utils.COMMANDS_PATH
+import com.twitch.nyquistbot.utils.CONFIGURATION_PATH
 
 class BotBuilder {
     fun loadConfiguration(): Configuration = readYamlObject(
-        configurationPath,
+        CONFIGURATION_PATH,
         Configuration::class.java
     )
 
     fun loadCommands() = readYamlObject(
-        commandsPath,
+        COMMANDS_PATH,
         CommandsList::class.java
     ).installCommands()
 
@@ -54,9 +54,10 @@ class BotBuilder {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class Api(
+        val twitchNickname: String = String(),
         val twitchClientId: String = String(),
         val twitchClientSecret: String = String(),
-        val irc: String = String(),
+        val oauthPassword: String = String(),
         val accessToken: String = String()
     )
 }
