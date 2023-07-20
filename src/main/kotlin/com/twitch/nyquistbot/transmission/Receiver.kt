@@ -4,7 +4,7 @@ import reactor.core.scheduler.Schedulers
 
 class Receiver (private val connection: Connection) {
 
-    fun configureReceiver(packageService: (String) -> (Unit)) {
+    fun configureReceiver(handleMessage: (String) -> (Unit)) {
         connection
             .queueFlux
             .metrics()
@@ -12,7 +12,8 @@ class Receiver (private val connection: Connection) {
                 Schedulers.parallel()
             )
             .subscribe {
-                packageService(it)
+                //if(!Activity.connection.isConnected()) return@subscribe
+                handleMessage(it)
             }
     }
 }

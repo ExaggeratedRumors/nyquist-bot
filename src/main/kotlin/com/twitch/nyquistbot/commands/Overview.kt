@@ -1,14 +1,12 @@
 package com.twitch.nyquistbot.commands
 
-import com.twitch.nyquistbot.transmission.Connection
+import com.twitch.nyquistbot.model.ChatMessage
+import com.twitch.nyquistbot.transmission.Sender
 
 class Overview: Command {
-    var counter: Int = 0
-    override fun execute(connection: Connection) {
-        counter += 1
-        connection.send("Test")
+    override fun execute(chatMessage: ChatMessage, sender: Sender) {
+        sender.sendMessage("Overview test")
     }
 
     override fun getCall() = "overview"
-    override fun getCounter() = counter
 }

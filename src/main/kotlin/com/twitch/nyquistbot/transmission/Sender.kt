@@ -1,24 +1,15 @@
 package com.twitch.nyquistbot.transmission
 
-import com.twitch.nyquistbot.model.BotBuilder
+import com.twitch.nyquistbot.model.ChatMessage
 
 class Sender (
     private val connection: Connection,
-    private val configuration: BotBuilder.Configuration
 ) {
-
-    fun serviceMessage(message: String) {
-        if(message.contains("Welcome, GLHF!")) {
-            println("AUTHENTICATED")
-        } else if (message.startsWith("PING")) {
-            println("RESPOND TO PING")
-            connection.send(message.replace("PING", "PONG"))
-        } else {
-
-        }
+    fun sendChatMessage(chatMessage: ChatMessage) {
+        connection.send("PRIVMSG #${chatMessage.channel} :${chatMessage.text}")
     }
 
-    fun sendChatResponse(message: String) {
-        connection.send("PRIVMSG #${configuration.channels[0]} :${message}")
+    fun sendMessage(message: String) {
+        connection.send(message)
     }
 }

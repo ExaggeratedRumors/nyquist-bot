@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.annotation.JsonNaming
 import com.twitch.nyquistbot.commands.Command
 import com.twitch.nyquistbot.commands.CommandsContainer
-import com.twitch.nyquistbot.utils.YamlReader.Companion.readYamlObject
 import com.twitch.nyquistbot.utils.COMMANDS_PATH
 import com.twitch.nyquistbot.utils.CONFIGURATION_PATH
+import com.twitch.nyquistbot.utils.YamlReader.Companion.readYamlObject
 
 class BotBuilder {
     fun loadConfiguration(): Configuration = readYamlObject(
@@ -24,7 +24,7 @@ class BotBuilder {
         val cc = CommandsContainer()
         val registeredCommands = HashMap<String, Command>()
         cc.implementedCommands.forEach {
-            if(this.commands[it.javaClass.simpleName]!!) registeredCommands[it.javaClass.simpleName] = it
+            if(this.commands[it.javaClass.simpleName] != null) registeredCommands[it.javaClass.simpleName] = it
         }
         return registeredCommands
     }
