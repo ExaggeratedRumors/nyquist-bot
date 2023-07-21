@@ -44,7 +44,9 @@ class BotActivity {
             handler = MessageHandler(registeredCommands, sender, configuration)
             receiver.configureReceiver { handler.handleMessage(it) }
 
-            sender.sendMessage("JOIN #${configuration.channels[0]}")
+            configuration.channels.forEach {
+                sender.sendMessage("JOIN #$it")
+            }
         }
     }
 }
