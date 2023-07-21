@@ -1,7 +1,7 @@
 package com.twitch.nyquistbot.controller
 
 import com.twitch.nyquistbot.commands.RandomPhrase
-import com.twitch.nyquistbot.model.Activity
+import com.twitch.nyquistbot.model.BotActivity
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.ui.set
@@ -12,7 +12,7 @@ class HtmlController {
     @GetMapping("/commands")
     fun commandsGet(model: Model): String {
         model["title"] = "Commands"
-        model.addAttribute("commands", Activity.registeredCommands)
+        model.addAttribute("commands", BotActivity.registeredCommands)
         return "commands"
     }
 

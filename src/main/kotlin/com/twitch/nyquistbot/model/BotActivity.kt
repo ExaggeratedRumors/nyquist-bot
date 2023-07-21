@@ -4,12 +4,13 @@ import com.twitch.nyquistbot.commands.Command
 import com.twitch.nyquistbot.transmission.Connection
 import com.twitch.nyquistbot.transmission.Receiver
 import com.twitch.nyquistbot.transmission.Sender
+import com.twitch.nyquistbot.utils.Configuration
 
-class Activity {
+class BotActivity {
     companion object {
         lateinit var registeredCommands: Map<String, Command>
         lateinit var connection: Connection
-        lateinit var configuration: BotBuilder.Configuration
+        lateinit var configuration: Configuration
         lateinit var handler: MessageHandler
         lateinit var receiver: Receiver
         lateinit var sender: Sender
@@ -24,10 +25,6 @@ class Activity {
             val botBuilder = BotBuilder()
             configuration = botBuilder.loadConfiguration()
             registeredCommands = botBuilder.loadCommands()
-
-
-            //val meterRegistry = SimpleMeterRegistry()
-            //Schedulers.enableMetrics()
         }
 
         private fun connectBot() {
@@ -39,26 +36,14 @@ class Activity {
         }
 
         private fun registerBot() {
-            println("sender")
             sender = Sender(connection)
-
-            sender.sendMessage("PASS ${configuration.api.oauthPassword}")
-            sender.sendMessage("NICK ${configuration.api.twitchNickname}")
-            println("receiver")
-
+            sender.sendMessage("PASS ${configuration.api.oauth_password}")
+            sender.sendMessage("NICK ${configuration.api.twitch_nickname}")
             receiver = Receiver(connection)
-            println("handler")
 
-            handler = MessageHandler(registeredCommands, sender)
-            receiver.configureReceiver { println(it)
-                handler.handleMessage(it) }
-            println("configure")
+            handler = MessageHandler(registeredCommands, sender, configuration)
+            receiver.configureReceiver { handler.handleMessage(it) }
 
-            (0..5).forEach {
-                println("czekamy na polaczenie $it")
-                Thread.sleep(1000L)
-            }
-            //Thread.sleep(TIMEOUT * 1000L)
             sender.sendMessage("JOIN #${configuration.channels[0]}")
         }
     }

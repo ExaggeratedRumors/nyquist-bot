@@ -1,19 +1,20 @@
 package com.twitch.nyquistbot.transmission
 
+import com.twitch.nyquistbot.model.BotActivity
+import com.twitch.nyquistbot.model.Message
 import reactor.core.scheduler.Schedulers
 
 class Receiver (private val connection: Connection) {
 
-    fun configureReceiver(handleMessage: (String) -> (Unit)) {
+    fun configureReceiver(handleMessage: (Message) -> (Unit)) {
         connection
             .queueFlux
-            .metrics()
             .subscribeOn(
                 Schedulers.parallel()
             )
             .subscribe {
-                //if(!Activity.connection.isConnected()) return@subscribe
-                handleMessage(it)
+                if(!BotActivity.connection.isConnected()) return@subscribe
+                handleMessage(Message(it))
             }
     }
 }

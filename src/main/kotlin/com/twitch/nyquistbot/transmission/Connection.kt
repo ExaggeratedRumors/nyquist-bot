@@ -15,7 +15,7 @@ class Connection (private val host: String, private val port: Int) {
     fun start() {
         try {
             socket = Socket(host, port)
-            output = PrintWriter(socket.getOutputStream())
+            output = PrintWriter(socket.getOutputStream(), true)
             input = BufferedReader(InputStreamReader(socket.getInputStream()))
             val inputStream = input.lines()
             queueFlux = Flux.fromStream(inputStream)

@@ -1,3 +1,4 @@
 commands:
   "Overview": false
   "RandomPhrase": true
+  "Echo": true
