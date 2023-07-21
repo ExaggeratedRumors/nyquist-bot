@@ -5,7 +5,7 @@ Chat-bot for Twitch platform based on Spring framework.
 ## Release
 
 `
-in progress
+0.1a
 `
 
 ## Technologies

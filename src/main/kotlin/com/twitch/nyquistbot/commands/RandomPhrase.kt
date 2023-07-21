@@ -17,7 +17,7 @@ class RandomPhrase : Command {
     override fun execute(chatMessage: Message, sender: Sender) {
         val newMessage = chatMessage.clone()
         newMessage.author = "bot"
-        newMessage.chatText = "hrases.random()"
+        newMessage.chatText = phrases.random()
         sender.sendChatMessage(newMessage)
     }
 
