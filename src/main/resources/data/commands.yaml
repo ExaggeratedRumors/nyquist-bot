@@ -1,4 +1,10 @@
 commands:
-  "Overview": false
-  "RandomPhrase": true
-  "Echo": true
+  "Overview":
+    call: overview
+    enabled: false
+  "RandomPhrase":
+    call: random
+    enabled: false
+  "Echo":
+    call: echo
+    enabled: false

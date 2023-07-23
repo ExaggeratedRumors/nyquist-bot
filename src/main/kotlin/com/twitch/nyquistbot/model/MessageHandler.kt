@@ -23,8 +23,8 @@ class MessageHandler (
         if (message.type == MessageType.CHAT) {
             if(message.prefix != configuration.prefix) return
             registeredCommands.forEach { (_, v) ->
-                if(v.getCall() == message.command) {
-                    println("ENGINE: Respond to command ${v.getCall()}")
+                if(v.call == message.command) {
+                    println("ENGINE: Respond to command ${v.call}")
                     v.execute(message, sender)
                     return@forEach
                 }

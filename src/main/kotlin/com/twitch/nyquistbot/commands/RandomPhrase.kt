@@ -6,7 +6,7 @@ import com.twitch.nyquistbot.utils.PHRASES_PATH
 import com.twitch.nyquistbot.utils.PhrasesList
 import com.twitch.nyquistbot.utils.YamlReader.Companion.readYamlObject
 
-class RandomPhrase : Command {
+class RandomPhrase : Command() {
     companion object {
         val phrases = readYamlObject(
             PHRASES_PATH,
@@ -20,6 +20,4 @@ class RandomPhrase : Command {
         newMessage.chatText = phrases.random()
         sender.sendChatMessage(newMessage)
     }
-
-    override fun getCall() = "phrase"
 }

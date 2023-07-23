@@ -22,7 +22,10 @@ class BotBuilder {
     private fun CommandsList.installCommands(): Map<String, Command> {
         val registeredCommands = HashMap<String, Command>()
         CommandsContainer.implementedCommands.forEach {
-            if(this.commands[it.javaClass.simpleName] != null) registeredCommands[it.javaClass.simpleName] = it
+            if(this.commands[it.javaClass.simpleName]?.enabled == true) {
+                registeredCommands[it.javaClass.simpleName] = it
+                it.call = this.commands[it.javaClass.simpleName]!!.call
+            }
         }
         return registeredCommands
     }

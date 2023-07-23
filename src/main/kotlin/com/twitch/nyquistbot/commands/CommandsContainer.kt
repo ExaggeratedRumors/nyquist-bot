@@ -5,7 +5,8 @@ class CommandsContainer {
         val implementedCommands = listOf(
             Echo(),
             Overview(),
-            RandomPhrase()
+            RandomPhrase(),
+            Statistics()
         )
     }
 }
