@@ -1,10 +1,13 @@
 commands:
   "Overview":
     call: overview
-    enabled: false
+    enabled: true
   "RandomPhrase":
     call: random
-    enabled: false
+    enabled: true
   "Echo":
     call: echo
-    enabled: false
+    enabled: true
+  "Statistics":
+    call: stats
+    enabled: true
