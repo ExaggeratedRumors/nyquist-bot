@@ -11,3 +11,6 @@ commands:
   "Statistics":
     call: stats
     enabled: true
+  "FollowCheck":
+    call: follow
+    enabled: true

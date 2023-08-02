@@ -3,8 +3,7 @@ package com.twitch.nyquistbot.model
 import com.twitch.nyquistbot.commands.Command
 import com.twitch.nyquistbot.model.ChatMessage.MessageType
 import com.twitch.nyquistbot.transmission.Sender
-import com.twitch.nyquistbot.utils.BotProperties
-import com.twitch.nyquistbot.utils.Configuration
+import com.twitch.nyquistbot.utils.ResourcesContainer
 
 class MessageHandler (
     private val registeredCommands: Map<String, Command>,
@@ -22,7 +21,7 @@ class MessageHandler (
             return
         }
         if (message.type == MessageType.CHAT) {
-            if(message.prefix != properties.configuration.prefix) return
+            if(message.prefix != ResourcesContainer.configuration.prefix) return
             registeredCommands.forEach { (_, v) ->
                 if(v.call == message.command) {
                     println("ENGINE: Respond to command ${v.call}")

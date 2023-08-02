@@ -1,6 +1,5 @@
 package com.twitch.nyquistbot.transmission
 
-import com.twitch.nyquistbot.model.BotActivity
 import com.twitch.nyquistbot.model.ChatMessage
 import reactor.core.scheduler.Schedulers
 
@@ -13,7 +12,7 @@ class Receiver (private val connection: Connection) {
                 Schedulers.parallel()
             )
             .subscribe {
-                if(!BotActivity.connection.isConnected()) return@subscribe
+                if(!connection.isConnected()) return@subscribe
                 handleMessage(ChatMessage(it))
             }
     }

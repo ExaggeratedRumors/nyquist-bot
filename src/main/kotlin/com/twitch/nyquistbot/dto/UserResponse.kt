@@ -1,4 +1,4 @@
-package com.twitch.nyquistbot.utils
+package com.twitch.nyquistbot.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

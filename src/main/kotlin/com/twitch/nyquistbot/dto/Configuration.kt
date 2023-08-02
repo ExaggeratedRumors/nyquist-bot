@@ -1,4 +1,4 @@
-package com.twitch.nyquistbot.utils
+package com.twitch.nyquistbot.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
@@ -11,7 +11,7 @@ data class Configuration(
     val api: Api = Api(),
     val oauth: Oauth = Oauth(),
     val channels: List<String> = listOf(),
-    val prefix: String
+    val prefix: String = String()
 )
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)

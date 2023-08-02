@@ -1,12 +1,15 @@
 package com.twitch.nyquistbot.commands
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.twitch.nyquistbot.dto.UsersResponse
+import com.twitch.nyquistbot.model.BotProperties
 import com.twitch.nyquistbot.model.ChatMessage
+import com.twitch.nyquistbot.transmission.RequestBuilder
 import com.twitch.nyquistbot.transmission.Sender
-import com.twitch.nyquistbot.utils.BotProperties
-import com.twitch.nyquistbot.utils.UsersResponse
 import okhttp3.OkHttpClient
-import okhttp3.Request
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
 
 class Overview: Command() {
     private val objectMapper = ObjectMapper()
@@ -14,29 +17,37 @@ class Overview: Command() {
 
     override fun execute(chatMessage: ChatMessage, properties: BotProperties, sender: Sender) {
         if(properties.oauthToken == null) {
-            println("ENGINE: Cannot execute Overview command, because OAuth token is null")
+            println("ENGINE: Cannot execute $call, because OAuth token is null")
             return
         }
-        val request = Request.Builder()
-            .url("${properties.configuration.api.url}users?login=${chatMessage.chatText}")
-            .addHeader("Client-ID", properties.configuration.api.twitch_client_id)
-            .addHeader("Authorization", "Bearer ${properties.oauthToken}")
-            .build()
+        val request = RequestBuilder.buildRequest(
+            RequestBuilder.getUserRequestUrl(chatMessage.chatText),
+            properties
+        )
 
         client.newCall(request)
             .execute()
-            .use {
-                if(!it.isSuccessful) {
-                    sender.responseToMessage(chatMessage , "Account doesn't exist.")
+            .use { response ->
+                if(!response.isSuccessful) {
+                    sender.responseToMessage(chatMessage , "@${chatMessage.author} account doesn't exist.")
+                    println("ENGINE: Refuse to $call non-existing user")
                     return
                 }
 
-                val usersResponse = objectMapper
-                    .readValue(it.body?.string(), UsersResponse::class.java)
-                    .data?.getOrNull(0)
+                val userData = objectMapper
+                    .readValue(response.body?.string(), UsersResponse::class.java)
+                    .data?.getOrNull(0) ?: return
 
-                if(usersResponse?.created_at != null)
-                    sender.responseToMessage(chatMessage, usersResponse.created_at)
+                userData.created_at?.let { date ->
+                    val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    val period = Period.between(
+                        LocalDate.parse(date.split("T")[0], dateFormat),
+                        LocalDate.now()
+                    )
+                    val chatResponse = "Account created ${period.years} years, ${period.months} months " +
+                            "and ${period.days} days from now"
+                    sender.responseToMessage(chatMessage, chatResponse)
+                }
             }
     }
 }

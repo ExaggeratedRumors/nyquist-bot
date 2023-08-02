@@ -35,14 +35,4 @@ class ChatMessage (val message: String) {
         chatText = chatText.substring("$prefix$command".length)
         if(chatText.length > 1 && chatText[0] == ' ') chatText = chatText.drop(1)
     }
-
-    fun clone(): ChatMessage {
-        return ChatMessage(this.message)
-    }
-
-    fun update(author: String, chatText: String): ChatMessage {
-        this.author = author
-        this.chatText = chatText
-        return this
-    }
 }

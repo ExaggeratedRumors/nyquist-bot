@@ -9,5 +9,5 @@ class NyquistBotApplication
 
 fun main(args: Array<String>) {
     runApplication<NyquistBotApplication>(*args)
-    BotActivity.startActivity()
+    BotActivity().startActivity()
 }

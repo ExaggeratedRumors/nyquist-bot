@@ -6,7 +6,8 @@ class CommandsContainer {
             Echo(),
             Overview(),
             RandomPhrase(),
-            Statistics()
+            Statistics(),
+            FollowCheck()
         )
     }
 }

@@ -3,22 +3,19 @@ package com.twitch.nyquistbot.model
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.twitch.nyquistbot.commands.Command
 import com.twitch.nyquistbot.commands.CommandsContainer
-import com.twitch.nyquistbot.utils.*
-import com.twitch.nyquistbot.utils.YamlReader.Companion.readYamlObject
+import com.twitch.nyquistbot.dto.CommandsList
+import com.twitch.nyquistbot.dto.Configuration
+import com.twitch.nyquistbot.dto.OAuthTokenResponse
+import com.twitch.nyquistbot.utils.ResourcesContainer
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
 class BotBuilder {
     fun loadBotProperties(): BotProperties {
-        val configuration = loadConfiguration()
-        val oauthToken = loadOAuthToken(configuration)
-        return BotProperties(configuration, oauthToken)
+        val oauthToken = loadOAuthToken(ResourcesContainer.configuration)
+        return BotProperties(oauthToken)
     }
-    private fun loadConfiguration(): Configuration = readYamlObject(
-        CONFIGURATION_PATH,
-        Configuration::class.java
-    )
 
     private fun loadOAuthToken(configuration: Configuration): String? {
         val requestBody = FormBody.Builder()
@@ -46,17 +43,12 @@ class BotBuilder {
         }
     }
 
-    fun loadCommands() = readYamlObject(
-        COMMANDS_PATH,
-        CommandsList::class.java
-    ).installCommands()
-
-    private fun CommandsList.installCommands(): Map<String, Command> {
+    fun registerCommands(commandsList: CommandsList): Map<String, Command> {
         val registeredCommands = HashMap<String, Command>()
         CommandsContainer.implementedCommands.forEach {
-            if(this.commands[it.javaClass.simpleName]?.enabled == true) {
+            if(commandsList.commands[it.javaClass.simpleName]?.enabled == true) {
                 registeredCommands[it.javaClass.simpleName] = it
-                it.call = this.commands[it.javaClass.simpleName]!!.call
+                it.call = commandsList.commands[it.javaClass.simpleName]!!.call
             }
         }
         return registeredCommands
