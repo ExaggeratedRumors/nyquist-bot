@@ -14,3 +14,6 @@ commands:
   "FollowCheck":
     call: follow
     enabled: true
+  "Sentence":
+    call: corobimy
+    enabled: true

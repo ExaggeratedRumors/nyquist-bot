@@ -42,15 +42,10 @@ class FollowCheck: Command() {
                     val followData = objectMapper
                         .readValue(response.body?.string(), FollowResponse::class.java)
                     if(followData.total == 1) {
-                        val period = followData.data?.get(0)?.followed_at.let {
-                            val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                            return@let Period.between(
-                                LocalDate.parse(it?.split("T")?.get(0), dateFormat),
-                                LocalDate.now()
-                            )
-                        }
+
+
                         sender.responseToMessage(chatMessage, "${splitChatText[0]} following" +
-                                " ${splitChatText[1]} for ${period.years} years")
+                                " ${splitChatText[1]} for ${getFollowDuration(followData)}")
                     }
                     else sender.responseToMessage(chatMessage , "${splitChatText[0]} isn't following ${splitChatText[1]}")
                 }
@@ -58,6 +53,23 @@ class FollowCheck: Command() {
             sender.responseToMessage(chatMessage , "@${chatMessage.author} account doesn't exist.")
             return
         }
+    }
+
+    private fun getFollowDuration(followData: FollowResponse): String {
+        val period = followData.data?.get(0)?.followed_at.let {
+            val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            return@let Period.between(
+                LocalDate.parse(it?.split("T")?.get(0), dateFormat),
+                LocalDate.now()
+            )
+        } ?: return "an indefinite period"
+        return if(period.years > 0)
+            "${period.years} years and ${period.months} months"
+        else if(period.months > 0)
+            "${period.months} months and ${period.days} days"
+        else if(period.days > 0)
+            "${period.days} days"
+        else "few hours"
     }
 
     private fun getUserID(nickname: String, properties: BotProperties): Long {

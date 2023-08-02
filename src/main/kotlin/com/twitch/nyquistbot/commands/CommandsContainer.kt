@@ -7,7 +7,8 @@ class CommandsContainer {
             Overview(),
             RandomPhrase(),
             Statistics(),
-            FollowCheck()
+            FollowCheck(),
+            Sentence()
         )
     }
 }
