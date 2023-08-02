@@ -1,6 +1,6 @@
 package com.twitch.nyquistbot.model
 
-class Message (val message: String) {
+class ChatMessage (val message: String) {
     enum class MessageType {
         CONNECTION, PING, CHAT, UNSERVICED
     }
@@ -33,9 +33,16 @@ class Message (val message: String) {
         prefix = chatText[0].toString()
         command = chatText.split(" ")[0].substring(1)
         chatText = chatText.substring("$prefix$command".length)
+        if(chatText.length > 1 && chatText[0] == ' ') chatText = chatText.drop(1)
     }
 
-    fun clone(): Message {
-        return Message(message)
+    fun clone(): ChatMessage {
+        return ChatMessage(this.message)
+    }
+
+    fun update(author: String, chatText: String): ChatMessage {
+        this.author = author
+        this.chatText = chatText
+        return this
     }
 }

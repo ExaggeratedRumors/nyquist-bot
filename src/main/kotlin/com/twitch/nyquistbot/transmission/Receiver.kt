@@ -1,12 +1,12 @@
 package com.twitch.nyquistbot.transmission
 
 import com.twitch.nyquistbot.model.BotActivity
-import com.twitch.nyquistbot.model.Message
+import com.twitch.nyquistbot.model.ChatMessage
 import reactor.core.scheduler.Schedulers
 
 class Receiver (private val connection: Connection) {
 
-    fun configureReceiver(handleMessage: (Message) -> (Unit)) {
+    fun configureReceiver(handleMessage: (ChatMessage) -> (Unit)) {
         connection
             .queueFlux
             .subscribeOn(
@@ -14,7 +14,7 @@ class Receiver (private val connection: Connection) {
             )
             .subscribe {
                 if(!BotActivity.connection.isConnected()) return@subscribe
-                handleMessage(Message(it))
+                handleMessage(ChatMessage(it))
             }
     }
 }

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 data class Configuration(
     val server: Server = Server(),
     val api: Api = Api(),
+    val oauth: Oauth = Oauth(),
     val channels: List<String> = listOf(),
     val prefix: String
 )
@@ -23,9 +24,16 @@ data class Server(
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Api(
+    val url: String = String(),
     val twitch_nickname: String = String(),
     val twitch_client_id: String = String(),
     val twitch_client_secret: String = String(),
+)
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Oauth(
+    val url: String = String(),
     val oauth_password: String = String(),
     val access_token: String = String()
 )

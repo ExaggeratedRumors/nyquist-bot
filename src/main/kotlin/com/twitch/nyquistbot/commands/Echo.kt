@@ -1,12 +1,11 @@
 package com.twitch.nyquistbot.commands
 
-import com.twitch.nyquistbot.model.Message
+import com.twitch.nyquistbot.model.ChatMessage
 import com.twitch.nyquistbot.transmission.Sender
+import com.twitch.nyquistbot.utils.BotProperties
 
 class Echo: Command() {
-    override fun execute(chatMessage: Message, sender: Sender) {
-        val newMessage = chatMessage.clone()
-        newMessage.author = "bot"
-        sender.sendChatMessage(newMessage)
+    override fun execute(chatMessage: ChatMessage, properties: BotProperties, sender: Sender) {
+        sender.responseToMessage(chatMessage, chatMessage.chatText)
     }
 }

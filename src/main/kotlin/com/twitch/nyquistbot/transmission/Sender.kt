@@ -1,15 +1,19 @@
 package com.twitch.nyquistbot.transmission
 
-import com.twitch.nyquistbot.model.Message
+import com.twitch.nyquistbot.model.ChatMessage
 
 class Sender (
     private val connection: Connection,
 ) {
-    fun sendChatMessage(chatMessage: Message) {
-        connection.send("PRIVMSG #${chatMessage.channel} :${chatMessage.chatText}")
+    fun sendChatMessage(chatText: String, channel: String) {
+        connection.send("PRIVMSG #$channel :$chatText")
     }
 
-    fun sendMessage(message: String) {
+    fun sendServerMessage(message: String) {
         connection.send(message)
+    }
+
+    fun responseToMessage(messageToResponse: ChatMessage, responseText: String) {
+        sendChatMessage(responseText, messageToResponse.channel)
     }
 }
