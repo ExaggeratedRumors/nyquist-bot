@@ -12,13 +12,13 @@ import java.time.format.DateTimeFormatter
 
 class Overview: Command() {
     override fun execute(chatMessage: ChatMessage, properties: BotProperties, sender: Sender) {
-        if(properties.oauthToken == null) {
+        if(properties.appAccessToken == null) {
             println("ENGINE: Cannot execute $call, because OAuth token is null")
             return
         }
         val request = BotRequest.buildRequest(
             BotRequest.getUserRequestUrl(chatMessage.chatText),
-            properties
+            properties.appAccessToken
         )
 
         BotRequest.executeRequest(request) { response ->

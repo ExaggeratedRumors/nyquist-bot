@@ -5,16 +5,15 @@ import com.twitch.nyquistbot.model.ChatMessage
 import com.twitch.nyquistbot.model.StreamService
 import com.twitch.nyquistbot.model.UserService
 import com.twitch.nyquistbot.transmission.Sender
-import com.twitch.nyquistbot.utils.ResourcesContainer
 
 class Sentence: Command() {
     override fun execute(chatMessage: ChatMessage, properties: BotProperties, sender: Sender) {
         try {
             val streamId = UserService.getUserID(chatMessage.channel, properties)
-            val botUserId = UserService.getUserID(ResourcesContainer.configuration.api.twitch_nickname, properties)
-            val moderators = StreamService.getStreamChatters(streamId, botUserId, properties)
+            val moderators = StreamService.getStreamModerators(streamId, properties)
         } catch (e: Exception) {
             println("ENGINE: Refuse to $call, not enough data")
+            e.printStackTrace()
             return
         }
         val sentence = "!tts natalia ty niepwoażna jesteś, dostałaś tyle pomysłów na" +

@@ -15,7 +15,7 @@ class FollowCheck: Command() {
     private val objectMapper = ObjectMapper()
 
     override fun execute(chatMessage: ChatMessage, properties: BotProperties, sender: Sender) {
-        if(properties.oauthToken == null) {
+        if(properties.appAccessToken == null) {
             println("ENGINE: Cannot execute $call, because OAuth token is null")
             return
         }
@@ -26,7 +26,7 @@ class FollowCheck: Command() {
             val idTo = UserService.getUserID(splitChatText[1], properties)
             val request = BotRequest.buildRequest(
                 BotRequest.getFollowToRequestUrl(idFrom, idTo),
-                properties
+                properties.appAccessToken
             )
 
             BotRequest.executeRequest(request) { response ->

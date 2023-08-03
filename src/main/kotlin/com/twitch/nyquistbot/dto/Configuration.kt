@@ -33,7 +33,8 @@ data class Api(
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Oauth(
-    val url: String = String(),
+    val token_url: String = String(),
+    val authorization_url: String = String(),
     val oauth_password: String = String(),
-    val access_token: String = String()
+    val code: String = String()
 )

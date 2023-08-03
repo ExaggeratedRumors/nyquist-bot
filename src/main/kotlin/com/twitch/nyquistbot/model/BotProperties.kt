@@ -1,5 +1,6 @@
 package com.twitch.nyquistbot.model
 
 data class BotProperties(
-    val oauthToken: String?
+    val appAccessToken: String?,
+    val userAccessToken: String?
 )

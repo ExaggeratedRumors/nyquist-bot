@@ -1,6 +1,5 @@
 package com.twitch.nyquistbot.transmission
 
-import com.twitch.nyquistbot.model.BotProperties
 import com.twitch.nyquistbot.utils.ResourcesContainer
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -8,10 +7,10 @@ import okhttp3.Response
 
 class BotRequest {
     companion object {
-        fun buildRequest(url: String, properties: BotProperties) = Request.Builder()
+        fun buildRequest(url: String, accessToken: String) = Request.Builder()
             .url(url)
             .addHeader("Client-ID", ResourcesContainer.configuration.api.twitch_client_id)
-            .addHeader("Authorization", "Bearer ${properties.oauthToken}")
+            .addHeader("Authorization", "Bearer $accessToken")
             .build()
 
         inline fun<R> executeRequest(request: Request, executor: (Response) -> (R)): R {

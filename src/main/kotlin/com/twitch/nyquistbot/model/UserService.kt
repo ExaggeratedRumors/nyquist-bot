@@ -8,12 +8,12 @@ import com.twitch.nyquistbot.transmission.BotRequest
 class UserService {
     companion object {
         fun getUserID(nickname: String, properties: BotProperties): Long {
-            if(nickname.isEmpty() || properties.oauthToken == null)
+            if(nickname.isEmpty() || properties.appAccessToken == null)
                 throw FollowCheck.UserNoExistsException()
 
             val request = BotRequest.buildRequest(
                 BotRequest.getUserRequestUrl(nickname),
-                properties
+                properties.appAccessToken
             )
 
             return BotRequest.executeRequest(request) { response ->

@@ -7,6 +7,7 @@ import com.twitch.nyquistbot.transmission.Sender
 import com.twitch.nyquistbot.utils.ResourcesContainer
 
 class BotActivity {
+    private val botBuilder = BotBuilder()
     private lateinit var registeredCommands: Map<String, Command>
     private lateinit var connection: Connection
     private lateinit var properties: BotProperties
@@ -16,40 +17,36 @@ class BotActivity {
 
     fun startActivity() {
         loadResources()
-        buildBot()
+        loadProperties()
+        registerCommands()
         connectBot()
-        registerBot()
+        registerTransmission()
+        joinChannels()
     }
 
     private fun loadResources() {
-        ResourcesContainer.loadResources()
+        botBuilder.loadResources()
     }
 
-    private fun buildBot() {
-        val botBuilder = BotBuilder()
+    private fun loadProperties() {
         properties = botBuilder.loadBotProperties()
+    }
+
+    private fun registerCommands() {
         registeredCommands = botBuilder.registerCommands(ResourcesContainer.commandsList)
     }
 
     private fun connectBot() {
-        connection = Connection(
-            ResourcesContainer.configuration.server.host,
-            ResourcesContainer.configuration.server.port
-        )
-        connection.start()
+        connection = botBuilder.startConnection()
     }
 
-    private fun registerBot() {
-        sender = Sender(connection)
-        sender.sendServerMessage("PASS ${ResourcesContainer.configuration.oauth.oauth_password}")
-        sender.sendServerMessage("NICK ${ResourcesContainer.configuration.api.twitch_nickname}")
-        receiver = Receiver(connection)
-
+    private fun registerTransmission() {
+        sender = botBuilder.registerSender(connection)
         handler = MessageHandler(registeredCommands, sender, properties)
-        receiver.configureReceiver { handler.handleMessage(it) }
+        receiver = botBuilder.registerReceiver(connection, handler)
+    }
 
-        ResourcesContainer.configuration.channels.forEach {
-            sender.sendServerMessage("JOIN #$it")
-        }
+    private fun joinChannels() {
+        botBuilder.joinChannels(sender)
     }
 }
