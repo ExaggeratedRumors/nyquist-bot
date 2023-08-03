@@ -21,9 +21,12 @@ class BotBuilder {
     }
 
     fun loadBotProperties(): BotProperties {
+        val userTokenPair = getUserAccessToken()
+
         return BotProperties(
             getAppAccessToken(),
-            getUserAccessToken()
+            userTokenPair.first,
+            userTokenPair.second
         )
     }
 
@@ -67,7 +70,7 @@ class BotBuilder {
         return authorizationUrl
     }
 
-    private fun getUserAccessToken(): String? {
+    private fun getUserAccessToken(): Pair<String?, String?> {
         val requestBody = FormBody.Builder()
             .add("client_id", ResourcesContainer.configuration.api.twitch_client_id)
             .add("client_secret", ResourcesContainer.configuration.api.twitch_client_secret)
@@ -84,14 +87,17 @@ class BotBuilder {
         BotRequest.executeRequest(request) { response ->
             if (!response.isSuccessful) {
                 println("ENGINE: User token cannot be gained")
-                return null
+                return Pair(null, null)
             }
 
             val userTokenResponse = ObjectMapper().readValue(
                 response.body?.string(),
                 UserTokenResponse::class.java
             )
-            return userTokenResponse.access_token
+            return Pair(
+                userTokenResponse.access_token,
+                userTokenResponse.refresh_token
+            )
         }
     }
 
