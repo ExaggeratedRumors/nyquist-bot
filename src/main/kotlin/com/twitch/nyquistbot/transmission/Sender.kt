@@ -5,7 +5,7 @@ import com.twitch.nyquistbot.model.ChatMessage
 class Sender (
     private val connection: Connection,
 ) {
-    fun sendChatMessage(chatText: String, channel: String) {
+    private fun sendChatMessage(chatText: String, channel: String) {
         connection.send("PRIVMSG #$channel :$chatText")
     }
 

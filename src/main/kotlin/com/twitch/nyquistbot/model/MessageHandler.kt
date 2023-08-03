@@ -12,7 +12,7 @@ class MessageHandler (
 ){
     fun handleMessage(message: ChatMessage) {
         if(message.type == MessageType.CONNECTION) {
-            println("ENGINE: Bot has been authorised")
+            println("ENGINE: Bot has been connected")
             return
         }
         if (message.type == MessageType.PING) {

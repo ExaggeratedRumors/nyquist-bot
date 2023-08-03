@@ -2,18 +2,16 @@ package com.twitch.nyquistbot.commands
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.twitch.nyquistbot.dto.FollowResponse
-import com.twitch.nyquistbot.dto.UsersResponse
 import com.twitch.nyquistbot.model.BotProperties
 import com.twitch.nyquistbot.model.ChatMessage
-import com.twitch.nyquistbot.transmission.RequestBuilder
+import com.twitch.nyquistbot.model.UserService
+import com.twitch.nyquistbot.transmission.BotRequest
 import com.twitch.nyquistbot.transmission.Sender
-import okhttp3.OkHttpClient
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
 
 class FollowCheck: Command() {
-    private val client = OkHttpClient()
     private val objectMapper = ObjectMapper()
 
     override fun execute(chatMessage: ChatMessage, properties: BotProperties, sender: Sender) {
@@ -24,31 +22,27 @@ class FollowCheck: Command() {
         val splitChatText = chatMessage.chatText.split(" ")
 
         try {
-            val idFrom = getUserID(splitChatText[0], properties)
-            val idTo = getUserID(splitChatText[1], properties)
-            val request = RequestBuilder.buildRequest(
-                RequestBuilder.getFollowRequestUrl(idFrom, idTo),
+            val idFrom = UserService.getUserID(splitChatText[0], properties)
+            val idTo = UserService.getUserID(splitChatText[1], properties)
+            val request = BotRequest.buildRequest(
+                BotRequest.getFollowToRequestUrl(idFrom, idTo),
                 properties
             )
 
-            client.newCall(request)
-                .execute()
-                .use { response ->
-                    if (!response.isSuccessful) {
-                        println("ENGINE: Refuse to $call incorrect response")
-                        throw UserNoExistsException()
-                    }
-
-                    val followData = objectMapper
-                        .readValue(response.body?.string(), FollowResponse::class.java)
-                    if(followData.total == 1) {
-
-
-                        sender.responseToMessage(chatMessage, "${splitChatText[0]} following" +
-                                " ${splitChatText[1]} for ${getFollowDuration(followData)}")
-                    }
-                    else sender.responseToMessage(chatMessage , "${splitChatText[0]} isn't following ${splitChatText[1]}")
+            BotRequest.executeRequest(request) { response ->
+                if (!response.isSuccessful) {
+                    println("ENGINE: Refuse to $call incorrect response")
+                    throw UserNoExistsException()
                 }
+
+                val followData = objectMapper
+                    .readValue(response.body?.string(), FollowResponse::class.java)
+                if(followData.total == 1) {
+                    sender.responseToMessage(chatMessage, "${splitChatText[0]} following" +
+                            " ${splitChatText[1]} for ${getFollowDuration(followData)}")
+                }
+                else sender.responseToMessage(chatMessage, "${splitChatText[0]} isn't following ${splitChatText[1]}")
+            }
         } catch (e: UserNoExistsException) {
             sender.responseToMessage(chatMessage , "@${chatMessage.author} account doesn't exist.")
             return
@@ -70,31 +64,6 @@ class FollowCheck: Command() {
         else if(period.days > 0)
             "${period.days} days"
         else "few hours"
-    }
-
-    private fun getUserID(nickname: String, properties: BotProperties): Long {
-        if(nickname.isEmpty() || properties.oauthToken == null)
-            throw UserNoExistsException()
-
-        val request = RequestBuilder.buildRequest(
-            RequestBuilder.getUserRequestUrl(nickname),
-            properties
-        )
-
-        client.newCall(request)
-            .execute()
-            .use { response ->
-                if(!response.isSuccessful) {
-                    println("ENGINE: Refuse to $call non-existing user")
-                    throw UserNoExistsException()
-                }
-
-                val userData = objectMapper
-                    .readValue(response.body?.string(), UsersResponse::class.java)
-                    .data?.getOrNull(0)
-
-                return userData?.id?.toLong() ?: throw UserNoExistsException()
-            }
     }
 
     class UserNoExistsException: Exception() {

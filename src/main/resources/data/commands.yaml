@@ -8,9 +8,6 @@ commands:
   "Echo":
     call: echo
     enabled: true
-  "Statistics":
-    call: stats
-    enabled: true
   "FollowCheck":
     call: follow
     enabled: true
